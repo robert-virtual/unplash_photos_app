@@ -18,9 +18,10 @@ class _PhotosPageState extends State<PhotosPage> {
   //authority // unencodedpath // query
   String authority = "api.unsplash.com";
   String unencodedPath = "search/photos";
-  late Future<List<Photo>> futurePhotos;
+  List<Future<List<Photo>>> data = [];
   String accessKey = "PXsNeNw0MIPqNbcv0c5Za0CZx9vorevotl7C60-EATk";
   int _value = 0;
+  List<String> which = [];
   List<String> cats = [
     "Aves",
     "Insectos",
@@ -33,11 +34,14 @@ class _PhotosPageState extends State<PhotosPage> {
   @override
   void initState() {
     super.initState();
-    refreshdata();
+    refreshdata("Aves");
   }
 
-  void refreshdata() {
-    futurePhotos = fetchPhotos();
+  void refreshdata(String who) {
+    if (!which.contains(who)) {
+      which.add(who);
+      data.add(fetchPhotos());
+    }
   }
 
   @override
@@ -65,7 +69,7 @@ class _PhotosPageState extends State<PhotosPage> {
                           setState(() {
                             _value = selected ? i : 0;
                             query["query"] = cats[_value];
-                            refreshdata();
+                            refreshdata(cats[i]);
                           });
                         },
                       ),
@@ -75,7 +79,7 @@ class _PhotosPageState extends State<PhotosPage> {
               ),
             ),
             FutureBuilder<List<Photo>>(
-                future: futurePhotos,
+                future: data[_value],
                 builder: (context, snap) {
                   if (snap.hasData) {
                     return ListView.builder(
