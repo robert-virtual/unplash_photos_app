@@ -16,13 +16,17 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'primer App',
+      theme: Theme.of(context).copyWith(
+          primaryColor: Colors.black,
+          appBarTheme: Theme.of(context)
+              .appBarTheme
+              .copyWith(brightness: Brightness.dark)),
       home: Scaffold(
           body: IndexedStack(
             index: index,
             children: [HomePage(), PhotosPage()],
           ),
           bottomNavigationBar: BottomNavigationBar(
-            showUnselectedLabels: false,
             currentIndex: index,
             onTap: (idx) {
               setState(() {

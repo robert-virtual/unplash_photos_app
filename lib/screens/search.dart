@@ -7,19 +7,33 @@ class DataSearch extends SearchDelegate<String> {
   List<Widget> buildActions(BuildContext context) {
     //actions
 
-    return [IconButton(onPressed: () {}, icon: Icon(Icons.clear))];
+    return [
+      IconButton(
+          onPressed: () {
+            query = "";
+          },
+          icon: Icon(Icons.clear))
+    ];
   }
 
   @override
   Widget buildLeading(BuildContext context) {
     // leadin icon on le the left
-    return IconButton(onPressed: () {}, icon: Icon(Icons.arrow_back));
+    return IconButton(
+        onPressed: () {
+          close(context, "");
+        },
+        icon: Icon(Icons.arrow_back));
   }
 
   @override
   Widget buildResults(BuildContext context) {
     // mostrar resultados
-    throw UnimplementedError();
+    historial.insert(0, query);
+    close(context, query);
+    return Center(
+      child: Text("Hola"),
+    );
   }
 
   @override

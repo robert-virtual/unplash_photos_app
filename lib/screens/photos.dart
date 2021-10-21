@@ -20,10 +20,11 @@ class _PhotosPageState extends State<PhotosPage> {
   //authority // unencodedpath // query
   String authority = "api.unsplash.com";
   String unencodedPath = "search/photos";
-  List<Future<List<Photo>>> data = [];
+  late Future<List<Photo>> data;
+
   String accessKey = "PXsNeNw0MIPqNbcv0c5Za0CZx9vorevotl7C60-EATk";
-  int _value = 0;
-  List<String> which = [];
+  int? _value = 0;
+  String? search = "";
   List<String> cats = [
     "Aves",
     "Insectos",
@@ -36,25 +37,34 @@ class _PhotosPageState extends State<PhotosPage> {
   @override
   void initState() {
     super.initState();
-    refreshdata("Aves");
+    refreshdata();
   }
 
-  void refreshdata(String who) {
-    if (!which.contains(who)) {
-      which.add(who);
-      data.add(fetchPhotos());
-    }
+  void refreshdata() {
+    data = fetchPhotos();
+  }
+
+  void buscar() {
+    _value = null;
+    query["query"] = search!;
+    data = fetchPhotos();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Unplash Fotos "),
+        title: Text("Unplash Fotos"),
         actions: [
           IconButton(
-              onPressed: () {
-                showSearch(context: context, delegate: DataSearch());
+              onPressed: () async {
+                search =
+                    await showSearch(context: context, delegate: DataSearch());
+                setState(() {
+                  if (search != "" && search != null) {
+                    buscar();
+                  }
+                });
               },
               icon: Icon(Icons.search))
         ],
@@ -74,10 +84,13 @@ class _PhotosPageState extends State<PhotosPage> {
                         label: Text(cats[i]),
                         selected: _value == i,
                         onSelected: (selected) {
+                          print("onSelected");
                           setState(() {
-                            _value = selected ? i : 0;
-                            query["query"] = cats[_value];
-                            refreshdata(cats[i]);
+                            _value = selected ? i : null;
+                            if (_value != null) {
+                              query["query"] = cats[_value ?? 0];
+                              refreshdata();
+                            }
                           });
                         },
                       ),
@@ -87,7 +100,7 @@ class _PhotosPageState extends State<PhotosPage> {
               ),
             ),
             FutureBuilder<List<Photo>>(
-                future: data[_value],
+                future: data,
                 builder: (context, snap) {
                   if (snap.hasData) {
                     return ListView.builder(
