@@ -21,7 +21,7 @@ class _PhotosPageState extends State<PhotosPage> {
   String authority = "api.unsplash.com";
   String unencodedPath = "search/photos";
   late Future<List<Photo>> data;
-
+  List<String> historial = [];
   String accessKey = "PXsNeNw0MIPqNbcv0c5Za0CZx9vorevotl7C60-EATk";
   int? _value = 0;
   String? search = "";
@@ -58,10 +58,12 @@ class _PhotosPageState extends State<PhotosPage> {
         actions: [
           IconButton(
               onPressed: () async {
-                search =
-                    await showSearch(context: context, delegate: DataSearch());
+                search = await showSearch(
+                    context: context,
+                    delegate: DataSearch(historial: historial));
                 setState(() {
                   if (search != "" && search != null) {
+                    historial.insert(0, search!);
                     buscar();
                   }
                 });

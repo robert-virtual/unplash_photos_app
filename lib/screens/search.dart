@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 class DataSearch extends SearchDelegate<String> {
-  var historial = ["No ha buscado nada"];
-
+  final List<String> historial;
+  DataSearch({required this.historial});
   @override
   List<Widget> buildActions(BuildContext context) {
     //actions
@@ -29,7 +29,7 @@ class DataSearch extends SearchDelegate<String> {
   @override
   Widget buildResults(BuildContext context) {
     // mostrar resultados
-    historial.insert(0, query);
+
     close(context, query);
     return Center(
       child: Text("Hola"),
@@ -39,13 +39,18 @@ class DataSearch extends SearchDelegate<String> {
   @override
   Widget buildSuggestions(BuildContext context) {
     // historial
-    return ListView.builder(
-        itemCount: historial.length,
-        itemBuilder: (context, i) {
-          return ListTile(
-            leading: Icon(Icons.history),
-            title: Text(historial[i]),
-          );
-        });
+    if (historial.length > 0) {
+      return ListView.builder(
+          itemCount: historial.length,
+          itemBuilder: (context, i) {
+            return ListTile(
+              leading: Icon(Icons.history),
+              title: Text(historial[i]),
+            );
+          });
+    }
+    return ListTile(
+      title: Text("Sugerencias"),
+    );
   }
 }
