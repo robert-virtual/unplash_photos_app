@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_linux_app1/home.dart';
+import 'package:flutter_linux_app1/screens/home.dart';
 import 'package:flutter_linux_app1/screens/photos.dart';
 
 void main() => runApp(MyApp());

@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_linux_app1/models/photo.dart';
+import 'package:flutter_linux_app1/screens/search.dart';
 import 'package:http/http.dart' as http;
 import 'package:transparent_image/transparent_image.dart';
 
@@ -49,7 +51,13 @@ class _PhotosPageState extends State<PhotosPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Unplash Fotos "),
-        actions: [IconButton(onPressed: () {}, icon: Icon(Icons.search))],
+        actions: [
+          IconButton(
+              onPressed: () {
+                showSearch(context: context, delegate: DataSearch());
+              },
+              icon: Icon(Icons.search))
+        ],
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -131,31 +139,5 @@ class _PhotosPageState extends State<PhotosPage> {
       return List.generate(photos.length, (i) => Photo.fromJson(photos[i]));
     }
     throw Exception("No se pudo cargar Las photos");
-  }
-}
-
-class Photo {
-  final String id;
-  final int likes;
-  final String? description;
-  final String url;
-  final String author;
-  final String userImg;
-
-  Photo(
-      {required this.id,
-      required this.author,
-      this.description,
-      required this.likes,
-      required this.url,
-      required this.userImg});
-  factory Photo.fromJson(Map<String, dynamic> json) {
-    return Photo(
-        id: json['id'],
-        author: json['user']['name'],
-        description: json['alt_description'],
-        likes: json['likes'],
-        url: json['urls']['regular'],
-        userImg: json['user']['profile_image']['medium']);
   }
 }
