@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_linux_app1/screens/home.dart';
 import 'package:flutter_linux_app1/screens/photos.dart';
+import 'package:flutter_linux_app1/screens/tasks_screen.dart';
 
 void main() => runApp(MyApp());
 
@@ -24,7 +25,7 @@ class _MyAppState extends State<MyApp> {
       home: Scaffold(
           body: IndexedStack(
             index: index,
-            children: [HomePage(), PhotosPage()],
+            children: [HomePage(), PhotosPage(), TaskPage()],
           ),
           bottomNavigationBar: BottomNavigationBar(
             currentIndex: index,
@@ -35,7 +36,8 @@ class _MyAppState extends State<MyApp> {
             },
             items: [
               BottomNavigationBarItem(label: "inicio", icon: Icon(Icons.home)),
-              BottomNavigationBarItem(label: "Fotos", icon: Icon(Icons.photo))
+              BottomNavigationBarItem(label: "Fotos", icon: Icon(Icons.photo)),
+              BottomNavigationBarItem(label: "Tareas", icon: Icon(Icons.list))
             ],
           )),
     );

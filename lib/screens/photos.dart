@@ -135,7 +135,7 @@ class _PhotosPageState extends State<PhotosPage> {
                         });
                   }
                   if (snap.hasError) {
-                    return Text("Ups ha habido un error al cargar los datos");
+                    return Center(child: Text(snap.error.toString()));
                   }
                   return Center(child: CircularProgressIndicator());
                 })
@@ -146,13 +146,19 @@ class _PhotosPageState extends State<PhotosPage> {
   }
 
   Future<List<Photo>> fetchPhotos() async {
-    final res = await http.get(Uri.https(authority, unencodedPath, query),
-        headers: {HttpHeaders.authorizationHeader: 'Client-ID $accessKey'});
-    if (res.statusCode == 200) {
-      List<dynamic> photos = jsonDecode(res.body)["results"];
+    try {
+      final res = await http.get(Uri.https(authority, unencodedPath, query),
+          headers: {HttpHeaders.authorizationHeader: 'Client-ID $accessKey'});
+      if (res.statusCode == 200) {
+        List<dynamic> photos = jsonDecode(res.body)["results"];
 
-      return List.generate(photos.length, (i) => Photo.fromJson(photos[i]));
+        return List.generate(photos.length, (i) => Photo.fromJson(photos[i]));
+      }
+      // throw Exception("No se pudo cargar Las photos");
+      return Future.error(
+          "Hubo un error al cargar los datos. Vuelva a intentar");
+    } on SocketException catch (_) {
+      return Future.error("No hay Coneccion a Internet");
     }
-    throw Exception("No se pudo cargar Las photos");
   }
 }
